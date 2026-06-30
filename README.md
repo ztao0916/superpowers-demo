@@ -2,22 +2,12 @@
 
 这里保留两类内容：
 
-- [superpowers-core-workflow.md](superpowers-core-workflow.md)：围绕禅道任务整理的七个核心 skill。
+- [superpowers-core-workflow.md](superpowers-core-workflow.md)：为什么使用 `superpowers`，以及七个核心 skill。
 - [demo-vue3](demo-vue3)：用于现场演示的 Vue 3 小 bug。
 
 ## 分享主线
 
-这次只介绍七个 skill：
-
-- `using-superpowers`
-- `brainstorming`
-- `using-git-worktrees`
-- `writing-plans`
-- `systematic-debugging`
-- `test-driven-development`
-- `verification-before-completion`
-
-主线是从禅道任务出发，讲清楚 Codex 在新页面、老需求优化、bug 修复时应该怎么被约束。
+先讲七个核心 skill：开发前选流程、澄清需求、拆计划、隔离工作区；开发中用证据调试、用测试定义行为；完成前必须验证。
 
 ## Demo 准备
 

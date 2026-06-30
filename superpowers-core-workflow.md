@@ -1,266 +1,253 @@
-# Superpowers 核心工作流
+# 为什么使用 Superpowers
 
-这份文档只介绍七个最常用的 skill。主线不是“记住 skill 名称”，而是把 Codex 放进日常开发流程里：拿到禅道任务，理解需求，隔离分支，拆计划，开发验证，再准备合并。
+我们用 Codex 做开发时，它很容易直接开始写代码。
 
-## 一条主线
+一个禅道任务丢给 Codex 后，如果没有约束，它可能会：
 
-```text
-禅道任务
-  -> using-superpowers
-  -> brainstorming
-  -> using-git-worktrees
-  -> writing-plans
-  -> systematic-debugging / test-driven-development
-  -> verification-before-completion
-```
+- 需求还没问清楚就开始实现。
+- 不区分新页面、老需求优化、bug 修复。
+- 多个需求并行时，把分支和工作区混在一起。
+- 修 bug 时没有复现，直接猜原因。
+- 改完代码后没有验证，就说已经完成。
 
-这条线适合两类常见任务：
+`superpowers` 的作用，就是把 Codex 拉回工程流程里。
 
-- 新页面、新功能、新模块。
-- 老需求优化、历史逻辑调整、bug 修复。
+它主要解决这些问题：
 
-## 1. using-superpowers
+- 需求不清时，先澄清。
+- 多需求并行时，先隔离工作区。
+- 改动较大时，先写计划。
+- 修 bug 时，先复现和定位。
+- 行为变化时，先用测试定义结果。
+- 完成前，先验证。
 
-`using-superpowers` 是入口 skill。它的作用是让 Codex 先判断当前任务应该进入哪种工作流，而不是直接开始写代码。
+## 1. using-superpowers：判断工作流
 
-适合在每次开始任务时使用，尤其是禅道任务描述比较短、上下文比较散的时候。
+**用来做什么：**
+让 Codex 在开始处理任务前，先判断当前任务应该进入哪种工作流。
 
-常用 prompt：
+**解决什么问题：**
+避免 Codex 拿到禅道任务后直接开写，导致需求没澄清、流程选错、改动范围失控。
 
-```text
-Please use using-superpowers first, then decide which workflow fits this Zentao task.
-```
-
-看点：
-
-- Codex 是否先识别任务类型。
-- Codex 是否说明后续会用哪些 skill。
-- Codex 是否避免直接进入实现。
-
-## 2. brainstorming
-
-`brainstorming` 用来把模糊需求变清楚。禅道任务里经常只有一句话，或者只写了现象，没有写边界、页面状态、接口影响和验收方式。
-
-适合这些情况：
-
-- 新页面只有大概描述。
-- 老需求要优化，但没有说清楚保留哪些行为。
-- 产品描述里有多个可能解释。
-- 不确定影响哪些页面、接口、权限或状态。
-
-常用 prompt：
+**常用 prompt：**
 
 ```text
-Please use brainstorming before implementation. Help me clarify the smallest useful version of this Zentao task first.
+这是一个禅道任务。请先使用 using-superpowers，判断这个任务应该进入哪种工作流，再开始处理。
 ```
 
-Codex 应该帮忙问清楚：
+`using-superpowers` 本身不负责完成需求，它负责帮 Codex 选对下一步。
 
-- 这个任务要解决什么问题。
-- 页面或逻辑的边界在哪里。
+比如：
+
+- 需求不清楚，下一步进入 `brainstorming`。
+- 需要独立分支，下一步进入 `using-git-worktrees`。
+- 改动比较大，下一步进入 `writing-plans`。
+- 是 bug，下一步进入 `systematic-debugging`。
+- 行为变化明确，下一步进入 `test-driven-development`。
+- 准备收尾，下一步进入 `verification-before-completion`。
+
+## 2. brainstorming：澄清需求
+
+**用来做什么：**
+当禅道任务还不够清楚时，先让 Codex 帮我们澄清需求，再进入实现。
+
+**解决什么问题：**
+很多任务标题看起来简单，但实际可能有多种理解。如果不先澄清，Codex 很容易按自己的理解直接写，最后做出来的不是我们真正要的结果。
+
+比如：
+
+```text
+优化订单详情页金额展示逻辑
+```
+
+这个任务可能是在说：
+
+- 页面样式要调整。
+- 金额字段要换展示规则。
+- 接口返回字段变了。
+- 历史金额计算逻辑有 bug。
+- 导出、打印、弹窗也要同步修改。
+
+这时就适合使用 `brainstorming`。
+
+它和 Codex `plan` 的区别：
+
+| 对比 | `brainstorming` | Codex `plan` |
+| --- | --- | --- |
+| 关注点 | 需求是否清楚 | 实现步骤是否清楚 |
+| 解决的问题 | “做什么”还不明确 | “怎么做”需要拆解 |
+| 适用时机 | 禅道任务刚拿到、描述模糊 | 需求已经明确，准备实现 |
+| 产出 | 需求理解、边界、验收点、方案取舍 | 步骤列表、文件范围、验证方式 |
+| 核心价值 | 防止做错方向 | 防止实现过程失控 |
+
+一句话理解：
+
+> `brainstorming` 先确认方向，Codex `plan` 再拆执行路径。方向没确认前，不要急着 plan。
+
+**常用 prompt：**
+
+```text
+这是一个禅道任务。请使用 brainstorming，先帮我澄清需求范围、边界和验收点，再开始实现。
+```
+
+`brainstorming` 应该帮我们确认：
+
+- 这个任务真正要解决什么问题。
+- 哪些行为需要改变。
 - 哪些已有行为不能变。
-- 需要哪些验收条件。
-- 是否需要拆成多个独立任务。
+- 影响哪些页面、接口或组件。
+- 最小可交付范围是什么。
+- 怎么判断这个任务完成了。
 
-分享时可以强调：需求不清时，好的 Codex 不是马上写代码，而是先帮我们把任务变成可执行说明。
+## 3. writing-plans：拆实现计划
 
-## 3. using-git-worktrees
+**用来做什么：**
+在开始修改代码前，先让 Codex 把实现步骤写清楚。
 
-`using-git-worktrees` 用来隔离并行需求。一个人同时处理多个禅道任务时，如果都堆在同一个目录和分支里，很容易出现未提交改动互相影响、切分支困难、回滚不清晰的问题。
+**如何理解：**
+`writing-plans` 可以类比成一份轻量 spec。它不是产品需求文档，也不是完整技术设计文档，而是实现前的执行说明：这次改什么、怎么改、涉及哪些文件、怎么验证。
 
-适合这些情况：
+**解决什么问题：**
+需求澄清之后，如果直接让 Codex 开始改，它可能会一边理解一边改代码，导致改动范围越来越大，也不方便 review。
 
-- 同时开发多个禅道任务。
-- 当前目录已有未完成改动，但又要插入另一个需求。
-- 某个任务需要独立分支开发。
-- 一个需求准备合并到 `dev`，另一个需求还不能合并。
+尤其适合这些任务：
 
-常用 prompt：
+- 新页面。
+- 老页面优化。
+- 涉及多个组件或接口的改动。
+- 需要保持历史行为不变的需求。
 
-```text
-Please use using-git-worktrees to set up an isolated workspace for this Zentao task before making changes.
-```
-
-Codex 应该做的事：
-
-- 先判断当前是否已经在隔离工作区。
-- 如果需要，再创建独立 worktree 和分支。
-- 在新工作区里安装依赖、跑基线测试。
-- 确认当前工作区干净后再开始改代码。
-
-分享时可以强调：worktree 不是为了炫技，而是为了让每个任务有自己的上下文，方便开发、验证、回滚和合并。
-
-## 4. writing-plans
-
-`writing-plans` 用来在较大改动前写计划。新页面、跨多个组件的优化、接口联动、权限逻辑调整，都不适合让 Codex 直接开改。
-
-适合这些情况：
-
-- 新页面或新模块。
-- 一个任务会改多个文件。
-- 需要同时改前端页面、接口调用和状态处理。
-- 老需求优化涉及兼容历史行为。
-
-常用 prompt：
+**常用 prompt：**
 
 ```text
-Please use writing-plans before editing files. Include the files to touch, implementation steps, and verification commands.
+这是一个禅道任务。请使用 writing-plans，先列出实现步骤、涉及文件和验证方式，再开始修改代码。
 ```
 
-计划里应该包含：
+`writing-plans` 应该帮我们确认：
 
-- 要改哪些文件。
-- 每一步改什么。
-- 哪些行为要保持不变。
-- 如何验证。
-- 哪些测试或手动检查必须跑。
+- 需要修改哪些文件。
+- 每一步具体做什么。
+- 哪些已有行为不能变。
+- 需要补哪些测试或验证。
+- 完成后怎么确认任务可交付。
 
-分享时可以强调：计划不是形式主义。它可以提前暴露任务范围，避免 Codex 一边猜一边改。
+## 4. using-git-worktrees：隔离工作区
 
-## 5. systematic-debugging
+**用来做什么：**
+为一个禅道任务准备独立工作区和分支，再开始修改代码。
 
-`systematic-debugging` 用来修 bug。老需求优化里经常会遇到“这个页面某种情况下不对”“以前好像不是这样”的问题，这时候最怕 Codex 直接猜原因。
+**解决什么问题：**
+多个任务并行开发时，如果都在同一个目录里切来切去，很容易出现未提交改动互相影响、分支切换困难、回滚不清晰的问题。
 
-适合这些情况：
+尤其适合这些情况：
+
+- 同时处理多个禅道任务。
+- 当前分支上已经有未完成改动。
+- 临时插入一个优先级更高的需求或 bug。
+- 一个任务准备合并到 `dev`，另一个任务还不能合并。
+
+**常用 prompt：**
+
+```text
+这是一个禅道任务。请使用 using-git-worktrees，为这个任务创建独立工作区和分支，再开始处理。
+```
+
+`using-git-worktrees` 应该帮我们确认：
+
+- 当前是否已经在独立工作区。
+- 是否需要新建 worktree 和分支。
+- 新工作区是否安装好依赖。
+- 开始改动前，当前工作区是否干净。
+
+## 5. systematic-debugging：系统化调试
+
+**用来做什么：**
+修 bug 时，要求 Codex 按“复现问题 -> 定位原因 -> 最小修复 -> 验证结果”的顺序处理。
+
+**解决什么问题：**
+避免 Codex 没有复现问题就直接猜原因，改完之后也不知道是不是真的修好了。
+
+尤其适合这些情况：
 
 - 禅道任务是 bug。
-- 现象能描述，但原因不清楚。
-- 线上或测试环境出现边界问题。
-- 老逻辑改动后出现回归。
+- 测试环境或线上反馈了异常现象。
+- 老需求优化后出现回归。
+- 问题只在某些边界条件下出现。
 
-常用 prompt：
+**常用 prompt：**
 
 ```text
-Please use systematic debugging. Reproduce the issue, identify the cause, make the smallest fix, and verify it.
+这是一个禅道 bug 任务。请使用 systematic-debugging，先复现问题，再定位原因，做最小修复并验证。
 ```
 
-Codex 应该按这个顺序走：
+`systematic-debugging` 应该帮我们确认：
 
-1. 复现问题。
-2. 找到证据。
-3. 定位原因。
-4. 做最小修复。
-5. 重新验证。
+- 问题是否能复现。
+- 复现步骤是什么。
+- 失败现象和预期行为分别是什么。
+- 根因在哪里。
+- 修复是否足够小。
+- 修复后是否重新验证。
 
-分享时可以强调：bugfix 的核心不是“改得快”，而是“知道自己为什么这么改”。
+## 6. test-driven-development：测试驱动开发
 
-## 6. test-driven-development
+**用来做什么：**
+在修改行为前，先写一个失败测试，再写最小实现让测试通过。
 
-`test-driven-development` 用来处理新行为和行为变化。它要求先写失败测试，再写实现。不是所有前端页面都容易完整自动化测试，但核心逻辑、工具函数、状态变更、边界规则都很适合。
+**解决什么问题：**
+避免 Codex 先改代码、后补测试，导致测试只是验证“现在的实现”，而不是验证“这次需求真正要求的行为”。
 
-适合这些情况：
+尤其适合这些情况：
 
 - 新增业务规则。
 - 修改已有判断逻辑。
-- 修复一个可以自动化复现的 bug。
-- 抽取或调整公共函数。
+- 修复可以自动化复现的 bug。
+- 调整工具函数、状态计算、边界逻辑。
 
-常用 prompt：
+**常用 prompt：**
 
 ```text
-Please use TDD. Write the failing test first, run it, implement the minimum code, then verify.
+这是一个行为变更任务。请使用 test-driven-development，先写失败测试，再实现最小改动并验证。
 ```
 
-Codex 应该做到：
+`test-driven-development` 应该帮我们确认：
 
-- 先写一个能失败的测试。
-- 运行测试，确认失败原因正确。
-- 写最小实现。
-- 重新运行测试。
-- 必要时再清理代码。
+- 先写的测试是否会失败。
+- 失败原因是否和需求相关。
+- 实现是否只做了最小改动。
+- 修改后测试是否通过。
+- 是否影响已有测试。
 
-分享时可以强调：TDD 不是为了多写测试，而是为了证明 Codex 真的理解了行为变化。
+TDD 不是为了多写测试，而是为了让 Codex 先用测试定义“什么叫做改对了”。
 
-## 7. verification-before-completion
+## 7. verification-before-completion：完成前验证
 
-`verification-before-completion` 用在收尾。Codex 很容易在“代码改完”后直接说完成，但团队真正需要的是可验证的完成。
+**用来做什么：**
+在 Codex 声称完成前，先运行相关检查，并明确说明哪些通过、哪些失败。
 
-适合这些情况：
+**解决什么问题：**
+避免 Codex 只说“应该可以了”或“已经修好了”，但没有测试、构建、lint、页面验证等证据。
+
+尤其适合这些情况：
 
 - 准备提交代码。
 - 准备提测。
 - 准备合并到 `dev` 或 `master`。
-- Codex 已经声称修好了某个问题。
+- Codex 已经说某个问题修好了。
 
-常用 prompt：
-
-```text
-Please use verification-before-completion. Run the relevant checks and report exactly what passed or failed.
-```
-
-验证内容可以包括：
-
-- 单元测试。
-- 类型检查。
-- lint。
-- 构建。
-- 关键页面手动验证。
-- 与禅道验收点逐条对照。
-
-分享时可以强调：完成不是“看起来改好了”，而是“有命令、有结果、有证据”。
-
-## 新页面任务怎么用
-
-新页面或新模块可以按这个顺序：
+**常用 prompt：**
 
 ```text
-using-superpowers
-  -> brainstorming
-  -> using-git-worktrees
-  -> writing-plans
-  -> test-driven-development
-  -> verification-before-completion
+请使用 verification-before-completion，运行相关检查，并明确说明哪些通过、哪些失败。
 ```
 
-示例 prompt：
+`verification-before-completion` 应该帮我们确认：
 
-```text
-This is a Zentao task for a new Vue 3 page. Please use using-superpowers, clarify the requirement with brainstorming, set up an isolated worktree, write an implementation plan, then implement with tests where practical and verify before completion.
-```
+- 单元测试是否通过。
+- 类型检查是否通过。
+- lint 是否通过。
+- 构建是否通过。
+- 关键页面或关键流程是否验证。
+- 禅道验收点是否逐条对照。
 
-## 老需求优化怎么用
-
-老需求优化可以按这个顺序：
-
-```text
-using-superpowers
-  -> brainstorming
-  -> using-git-worktrees
-  -> writing-plans
-  -> systematic-debugging / test-driven-development
-  -> verification-before-completion
-```
-
-示例 prompt：
-
-```text
-This Zentao task updates an existing requirement. Please use using-superpowers, clarify which existing behavior must stay unchanged, set up an isolated worktree, write a plan, and verify the final change against the acceptance points.
-```
-
-## Bug 任务怎么用
-
-bug 任务可以按这个顺序：
-
-```text
-using-superpowers
-  -> using-git-worktrees
-  -> systematic-debugging
-  -> test-driven-development
-  -> verification-before-completion
-```
-
-示例 prompt：
-
-```text
-This Zentao task is a bug report. Please use using-git-worktrees for isolation, then systematic debugging to reproduce and diagnose it. If practical, add a failing test before the fix, then verify before completion.
-```
-
-## 最小团队约定
-
-- 每个禅道任务开始时，先让 Codex 判断该用哪些 skill。
-- 需求不清时，先 `brainstorming`，不要直接实现。
-- 多个任务并行时，先 `using-git-worktrees`。
-- 大改动前，先 `writing-plans`。
-- bug 任务优先 `systematic-debugging`。
-- 行为变化尽量用 `test-driven-development`。
-- 合并或提测前，必须 `verification-before-completion`。
+完成不是“看起来改好了”，而是“有命令、有结果、有证据”。
