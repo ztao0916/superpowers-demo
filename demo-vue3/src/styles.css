@@ -10,7 +10,6 @@
 
 body {
   margin: 0;
-  min-width: 1280px;
   background: #04101f;
 }
 
@@ -104,6 +103,7 @@ button {
 
 .dashboard-screen {
   width: 100vw;
+  min-width: 1280px;
   height: 100vh;
   display: grid;
   grid-template-rows: 104px 116px minmax(0, 1fr);
@@ -132,19 +132,19 @@ button {
   text-transform: uppercase;
 }
 
-h1,
-h2,
-p {
+.dashboard-screen h1,
+.dashboard-screen h2,
+.dashboard-screen p {
   margin: 0;
 }
 
-h1 {
+.dashboard-screen h1 {
   color: #ffffff;
   font-size: 2.25rem;
   line-height: 1.1;
 }
 
-h2 {
+.dashboard-screen h2 {
   color: #ffffff;
   font-size: 1rem;
 }
