@@ -1,148 +1,148 @@
-# Warehouse Inventory Risk Screen Design
+# 仓库库存缺货风险大屏需求设计
 
-## Objective
+## 目标
 
-Create a new 1920x1080 visual dashboard page for warehouse inventory monitoring.
+新增一个 1920x1080 的仓库库存监控可视化大屏页面。
 
-The page focuses on multi-warehouse SKU stockout risk for supply chain and business decision makers. The first version uses frontend mock data only, while keeping data fields clear enough for a future backend API.
+页面聚焦多仓库 SKU 缺货风险，主要服务供应链负责人和经营决策人员。第一版只使用前端 mock 数据，但需要把字段口径定义清楚，方便后续接入真实后端接口。
 
-## Audience
+## 使用对象
 
-Primary users are supply chain or business leaders who need to understand where stockout risk is growing and which SKUs need attention.
+主要使用对象是供应链负责人或经营负责人。他们需要快速判断哪些仓库、哪些 SKU 的缺货风险正在升高，并据此安排补货或调拨。
 
-This is not an operator task page. It should support quick judgment on risk, not detailed inventory editing.
+这不是一线操作页面，不提供库存编辑、单据处理或明细维护能力。页面目标是帮助管理者快速判断风险，而不是完成具体库存操作。
 
-## Scope
+## 范围
 
-In scope:
+本期包含：
 
-- One dark tech-style 1920x1080 dashboard page.
-- Mock data for all cards, charts, and tables.
-- Minute-level refresh language in the UI.
-- Top KPI strip with five inventory risk metrics.
-- SKU stockout risk table.
-- Multi-warehouse risk comparison.
-- Risk level distribution.
-- Seven-day risk trend chart.
-- Replenishment suggestion summary.
+- 一个深色科技风的 1920x1080 大屏页面。
+- 所有指标卡、图表、表格均使用前端 mock 数据。
+- 页面展示分钟级刷新提示。
+- 顶部展示 5 个库存风险核心 KPI。
+- 展示 SKU 缺货风险清单。
+- 展示多仓库风险对比。
+- 展示风险等级分布。
+- 展示近 7 天缺货风险趋势。
+- 展示补货建议概览。
 
-Out of scope for the first version:
+本期不包含：
 
-- Real backend integration.
-- Warehouse or SKU drill-down pages.
-- Editable inventory records.
-- User-configurable widgets.
-- Complex filters or table pagination.
-- Authentication or permission logic.
+- 真实后端接口接入。
+- 仓库或 SKU 下钻详情页。
+- 库存记录编辑能力。
+- 用户自定义组件配置。
+- 复杂筛选或表格分页。
+- 登录鉴权或权限控制。
 
-## Page Layout
+## 页面布局
 
-Use the selected Risk Matrix layout.
+采用已确认的 Risk Matrix 布局。
 
-The page is structured as:
+页面结构如下：
 
-1. Header
-   - Dashboard title.
-   - English subtitle or concise secondary description.
-   - Last updated time.
-   - Refresh frequency label.
+1. 头部区域
+   - 大屏标题。
+   - 英文副标题或简短辅助说明。
+   - 最后更新时间。
+   - 刷新频率说明。
 
-2. Top KPI strip
-   - Five equal-width metric cards.
-   - Cards use strong numeric hierarchy and color-coded risk emphasis.
+2. 顶部 KPI 区域
+   - 5 个等宽指标卡。
+   - 指标卡突出数字层级，并使用颜色表达风险程度。
 
-3. Main content area
-   - Left: SKU stockout risk table.
-   - Middle: warehouse risk comparison and risk level distribution.
-   - Right: seven-day risk trend and replenishment suggestion summary.
+3. 主体内容区域
+   - 左侧：SKU 缺货风险清单。
+   - 中间：多仓库风险对比、风险等级分布。
+   - 右侧：近 7 天缺货风险趋势、补货建议概览。
 
-The page should fit a 1920x1080 screen without vertical scrolling.
+页面需要完整适配 1920x1080 屏幕，首版不依赖纵向滚动查看核心内容。
 
-## KPI Metrics
+## 顶部 KPI
 
-The top KPI strip contains:
+顶部 KPI 区域展示以下 5 个指标：
 
-- Total inventory units.
-- Stockout risk SKU count.
-- Critical stockout SKU count.
-- Average sellable days.
-- Affected warehouse count.
+- 库存总件数。
+- 缺货风险 SKU 数。
+- 严重缺货 SKU 数。
+- 平均可售天数。
+- 受影响仓库数。
 
-These metrics should be calculated from mock data or kept in a single mock summary object.
+这些指标可以从 mock 数据计算，也可以统一维护在一个 mock 汇总对象中。
 
-## Risk Table
+## SKU 缺货风险清单
 
-The SKU stockout risk table shows only SKUs whose sellable days are less than or equal to 7 days.
+SKU 缺货风险清单只展示可售天数小于等于 7 天的 SKU。
 
-Columns:
+表格字段：
 
-- SKU code.
-- Product name.
-- Category.
-- Risk warehouse.
-- Current inventory.
-- Average daily sales.
-- Sellable days.
-- Risk level.
-- Suggested replenishment quantity.
+- SKU 编码。
+- 商品名称。
+- 所属品类。
+- 风险仓库。
+- 当前库存。
+- 日均销量。
+- 可售天数。
+- 风险等级。
+- 建议补货量。
 
-Sort order:
+排序规则：
 
-1. Critical risk first.
-2. Lower sellable days first.
-3. Higher average daily sales first.
+1. 严重风险优先。
+2. 可售天数越低越靠前。
+3. 日均销量越高越靠前。
 
-## Risk Level Rules
+## 风险等级规则
 
-Risk level is derived from sellable days:
+风险等级根据可售天数计算：
 
-- Critical: less than 2 days.
-- Warning: greater than or equal to 2 days and less than 5 days.
-- Watch: greater than or equal to 5 days and less than or equal to 7 days.
+- 严重：小于 2 天。
+- 预警：大于等于 2 天且小于 5 天。
+- 关注：大于等于 5 天且小于等于 7 天。
 
-SKUs above 7 sellable days are not shown in the stockout risk table.
+可售天数大于 7 天的 SKU 不进入缺货风险清单。
 
-## Warehouse Comparison
+## 多仓库风险对比
 
-The warehouse comparison ranks warehouses by stockout risk SKU count.
+多仓库风险对比按缺货风险 SKU 数排序。
 
-Each row shows:
+每一行展示：
 
-- Warehouse name.
-- Stockout risk SKU count.
-- Visual bar length based on the highest risk count.
+- 仓库名称。
+- 缺货风险 SKU 数。
+- 基于最高风险数换算的可视化条形长度。
 
-The first version does not need warehouse drill-down.
+第一版不需要支持仓库下钻。
 
-## Seven-Day Trend
+## 近 7 天趋势
 
-The trend chart shows the last seven days.
+趋势图展示近 7 天数据。
 
-Series:
+趋势线包含：
 
-- Total risk SKU count.
-- Warning SKU count.
-- Critical SKU count.
+- 缺货风险 SKU 总数。
+- 预警 SKU 数。
+- 严重缺货 SKU 数。
 
-The chart should make worsening risk obvious through line direction, color, and labels.
+图表需要通过线条走势、颜色和标签，让风险是否恶化一眼可见。
 
-## Replenishment Summary
+## 补货建议概览
 
-The replenishment summary gives executive-level action signals, not detailed execution steps.
+补货建议概览只提供经营层面的行动信号，不展示复杂执行明细。
 
-Show:
+展示内容：
 
-- High-priority replenishment count.
-- Medium-priority replenishment count.
-- Optional transfer suggestion summary between warehouses.
+- 高优先级补货数量。
+- 中优先级补货数量。
+- 可选的跨仓调拨建议摘要。
 
-Suggested replenishment quantity can be generated by mock logic, such as target coverage days minus current inventory.
+建议补货量可以使用 mock 逻辑生成，例如按目标覆盖天数和当前库存差值计算。
 
-## Data Model
+## 数据模型
 
-Use frontend mock data in the first version.
+第一版使用前端 mock 数据。
 
-Suggested mock structures:
+建议 mock 结构：
 
 ```js
 const inventorySummary = {
@@ -186,54 +186,56 @@ const sevenDayTrend = [
 ]
 ```
 
-## Visual Direction
+mock 数据字段名保持英文，便于后续直接迁移到接口字段或前端状态结构中。
 
-Use a dark technology dashboard style:
+## 视觉风格
 
-- Dark navy background.
-- Cyan and blue for neutral information.
-- Red for critical risk.
-- Orange for warning risk.
-- Yellow for watch risk.
-- Bright numeric values with clear contrast.
+使用深色科技风大屏样式：
 
-Avoid decorative effects that reduce readability. The screen should feel like an executive monitoring surface, not a marketing page.
+- 深蓝黑色背景。
+- 青色和蓝色表达中性信息。
+- 红色表达严重风险。
+- 橙色表达预警风险。
+- 黄色表达关注风险。
+- 关键数字需要高亮，并保证足够对比度。
 
-## Refresh Behavior
+避免使用影响可读性的装饰效果。页面应当像经营监控界面，而不是营销展示页。
 
-The first version can simulate minute-level data freshness with mock timestamps.
+## 刷新行为
 
-Required behavior:
+第一版用 mock 时间模拟分钟级数据新鲜度。
 
-- Show last updated time.
-- Show refresh frequency as 1-5 minutes.
-- Data can be static mock data for the first delivery.
+页面需要展示：
 
-No real polling is required in the MVP.
+- 最后更新时间。
+- 刷新频率，展示为 1-5 分钟。
+- 首版可以使用静态 mock 数据。
 
-## Empty And Error States
+MVP 不需要实现真实轮询。
 
-Because the first version is mock-only, runtime error handling can stay minimal.
+## 空状态和异常状态
 
-Still define display behavior for future API integration:
+由于第一版只使用 mock 数据，运行时错误处理保持最小化。
 
-- If no risk SKUs exist, show a calm empty state in the table area.
-- If summary data is unavailable, show placeholder dashes rather than broken layout.
-- If chart data is unavailable, show an empty chart panel with a short message.
+但需求中先定义后续接入接口后的展示原则：
 
-## Acceptance Criteria
+- 如果没有缺货风险 SKU，表格区域展示平稳的空状态。
+- 如果汇总数据不可用，指标卡展示短横线，不能破坏布局。
+- 如果图表数据不可用，图表面板展示空图表提示。
 
-- The page presents a complete 1920x1080 warehouse inventory risk dashboard.
-- The page uses mock data and does not require backend APIs.
-- The top KPI strip includes all five agreed metrics.
-- The SKU table includes the agreed fields and risk level rules.
-- Warehouse comparison is sorted by stockout risk SKU count.
-- Trend chart shows the last seven days.
-- Visual styling uses a dark tech direction with clear risk colors.
-- The page can be reviewed as an MVP without scroll-dependent content.
+## 验收标准
 
-## Implementation Notes
+- 页面呈现一个完整的 1920x1080 仓库库存缺货风险大屏。
+- 页面使用 mock 数据，不依赖后端接口。
+- 顶部 KPI 包含已确认的 5 个指标。
+- SKU 表格包含已确认字段，并符合风险等级规则。
+- 多仓库对比按缺货风险 SKU 数排序。
+- 趋势图展示近 7 天数据。
+- 视觉风格为深色科技风，风险颜色清晰。
+- 页面核心内容不依赖纵向滚动即可完整查看。
 
-If implemented inside the current Vue demo project, add the page as a focused Vue component rather than expanding the existing cart quantity demo.
+## 实现说明
 
-Keep mock data close to the page for the first version. Extract it later only when real API integration starts or multiple pages share the same data.
+如果在当前 Vue demo 项目中实现，建议新增一个独立的大屏组件，不要把现有购物车数量 demo 扩展成复杂页面。
+
+第一版 mock 数据可以靠近页面组件维护。只有在接入真实接口或多个页面共享数据时，再抽取成独立数据模块。
