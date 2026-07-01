@@ -79,7 +79,10 @@ export function getWarehouseRisks(rows = rawWarehouseRisks) {
 
   return [...rows]
     .sort((a, b) => b.riskSkuCount - a.riskSkuCount)
-    .map((row) => ({ ...row, barPercent: Math.round((row.riskSkuCount / maxRiskCount) * 100) }))
+    .map((row) => ({
+      ...row,
+      barPercent: maxRiskCount === 0 ? 0 : Math.round((row.riskSkuCount / maxRiskCount) * 100)
+    }))
 }
 
 export const riskSkus = getRiskSkus()

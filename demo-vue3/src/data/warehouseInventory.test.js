@@ -4,7 +4,10 @@ import {
   getRiskSkus,
   getWarehouseRisks,
   inventorySummary,
+  replenishmentSummary,
+  riskLevelLabels,
   riskSkus,
+  sevenDayTrend,
   warehouseRisks
 } from './warehouseInventory'
 
@@ -82,9 +85,21 @@ describe('warehouse inventory data rules', () => {
     expect(rows[2].barPercent).toBe(37)
   })
 
+  it('uses zero-width bars when all warehouses have no stockout risk SKUs', () => {
+    const rows = getWarehouseRisks([
+      { warehouseName: '华北仓', riskSkuCount: 0, criticalSkuCount: 0 },
+      { warehouseName: '华东仓', riskSkuCount: 0, criticalSkuCount: 0 }
+    ])
+
+    expect(rows.map((row) => row.barPercent)).toEqual([0, 0])
+  })
+
   it('exports complete mock data for the dashboard', () => {
     expect(inventorySummary.riskSkuCount).toBe(128)
+    expect(riskLevelLabels.critical).toBe('严重')
     expect(riskSkus.length).toBeGreaterThanOrEqual(6)
     expect(warehouseRisks.length).toBeGreaterThanOrEqual(4)
+    expect(sevenDayTrend).toHaveLength(7)
+    expect(replenishmentSummary.transferSuggestion).toBe('华北仓可调拨 8 个 SKU 至华东仓')
   })
 })
