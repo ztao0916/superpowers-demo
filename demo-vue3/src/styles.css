@@ -132,11 +132,13 @@ h2 {
   display: grid;
   grid-template-columns: minmax(620px, 1.35fr) minmax(360px, 0.85fr) minmax(380px, 0.9fr);
   gap: 14px;
+  overflow: hidden;
 }
 
 .panel {
   min-height: 0;
-  padding: 16px;
+  overflow: hidden;
+  padding: clamp(10px, 1.5vh, 16px);
 }
 
 .panel-heading {
@@ -144,7 +146,7 @@ h2 {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 14px;
+  margin-bottom: clamp(8px, 1.3vh, 14px);
 }
 
 .panel-heading span {
@@ -158,8 +160,10 @@ h2 {
 
 .risk-table {
   display: grid;
-  gap: 8px;
+  gap: clamp(6px, 0.9vh, 8px);
   font-size: 0.78rem;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .risk-table__head,
@@ -226,12 +230,15 @@ h2 {
   min-height: 0;
   display: grid;
   grid-template-rows: 1fr 1fr;
-  gap: 14px;
+  gap: clamp(8px, 1.3vh, 14px);
+  overflow: hidden;
 }
 
 .warehouse-list {
   display: grid;
-  gap: 12px;
+  gap: clamp(7px, 1.1vh, 12px);
+  min-height: 0;
+  overflow: hidden;
 }
 
 .warehouse-row__meta {
@@ -265,12 +272,14 @@ h2 {
 }
 
 .distribution-bars {
-  height: 150px;
+  height: clamp(112px, 16vh, 150px);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-items: end;
-  gap: 18px;
-  padding-top: 12px;
+  gap: clamp(12px, 1.8vh, 18px);
+  min-height: 0;
+  overflow: hidden;
+  padding-top: clamp(6px, 1vh, 12px);
 }
 
 .distribution-bar {
@@ -309,7 +318,7 @@ h2 {
 
 .trend-chart {
   width: 100%;
-  height: 172px;
+  height: clamp(96px, 18vh, 172px);
 }
 
 .trend-chart polyline {
@@ -341,14 +350,16 @@ h2 {
 
 .replenishment-list {
   display: grid;
-  gap: 12px;
+  gap: clamp(8px, 1.2vh, 12px);
   color: #dbeafe;
   font-size: 0.9rem;
   line-height: 1.5;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .replenishment-list p {
-  padding: 10px;
+  padding: clamp(8px, 1.2vh, 10px);
   border: 1px solid rgba(56, 189, 248, 0.18);
   border-radius: 8px;
   background: rgba(15, 35, 62, 0.72);
