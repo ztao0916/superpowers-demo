@@ -14,8 +14,9 @@ const props = defineProps({
 
 const emit = defineEmits(['update:quantity'])
 
-const canDecrease = computed(() => props.quantity > 0)
-const canIncrease = computed(() => props.quantity && props.quantity < props.stock)
+const displayQuantity = computed(() => Math.max(0, props.quantity))
+const canDecrease = computed(() => displayQuantity.value > 0)
+const canIncrease = computed(() => displayQuantity.value < props.stock)
 
 function decrease() {
   if (!canDecrease.value) return
@@ -24,7 +25,7 @@ function decrease() {
 
 function increase() {
   if (!canIncrease.value) return
-  emit('update:quantity', props.quantity + 1)
+  emit('update:quantity', displayQuantity.value + 1)
 }
 </script>
 
@@ -40,7 +41,7 @@ function increase() {
       -
     </button>
 
-    <output class="quantity-value" aria-label="Current quantity">{{ quantity }}</output>
+    <output class="quantity-value" aria-label="Current quantity">{{ displayQuantity }}</output>
 
     <button
       type="button"

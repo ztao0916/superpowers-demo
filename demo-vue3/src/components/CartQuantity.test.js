@@ -33,6 +33,26 @@ describe('CartQuantity', () => {
     expect(wrapper.emitted('update:quantity')).toEqual([[1]])
   })
 
+  it('treats negative quantity as zero', async () => {
+    const wrapper = mount(CartQuantity, {
+      props: {
+        quantity: -1,
+        stock: 3
+      }
+    })
+
+    expect(wrapper.get('[aria-label="Current quantity"]').text()).toBe('0')
+    expect(wrapper.get('button[aria-label="Decrease quantity"]').attributes('disabled')).toBe('')
+
+    const increase = wrapper.get('button[aria-label="Increase quantity"]')
+
+    expect(increase.attributes('disabled')).toBeUndefined()
+
+    await increase.trigger('click')
+
+    expect(wrapper.emitted('update:quantity')).toEqual([[1]])
+  })
+
   it('does not increase beyond available stock', async () => {
     const wrapper = mount(CartQuantity, {
       props: {

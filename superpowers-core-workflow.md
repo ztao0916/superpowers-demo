@@ -189,6 +189,9 @@
 - 修复是否足够小。
 - 修复后是否重新验证。
 
+**本项目 demo：**
+`demo-vue3/src/components/CartQuantity.vue` 中保留了一个边界 bug。运行 `CartQuantity.test.js` 可以复现：`quantity = 0` 且 `stock > 0` 时，增加按钮不应该禁用，但初始测试会失败。演示时重点看 Codex 是否先复现、再读失败信息和代码、最后只修改 `canIncrease` 判断。
+
 ## 6. test-driven-development：测试驱动开发
 
 **用来做什么：**
@@ -219,6 +222,9 @@
 - 是否影响已有测试。
 
 TDD 不是为了多写测试，而是为了让 Codex 先用测试定义“什么叫做改对了”。
+
+**本项目 demo：**
+在 `CartQuantity.test.js` 中先新增 `quantity < 0` 的边界测试，确认测试失败后，再用最小实现把负数量按 `0` 处理。演示重点不是多写代码，而是让 Codex 先用测试说清楚“什么叫改对了”。
 
 ## 7. verification-before-completion：完成前验证
 
