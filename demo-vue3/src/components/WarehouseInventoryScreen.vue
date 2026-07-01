@@ -40,10 +40,11 @@ function getTrendPoints(key) {
   const max = Math.max(...values)
   const min = Math.min(...values)
   const range = max - min || 1
+  const xRange = values.length > 1 ? values.length - 1 : 1
 
   return values
     .map((value, index) => {
-      const x = padding + (index * (width - padding * 2)) / (values.length - 1)
+      const x = padding + (index * (width - padding * 2)) / xRange
       const y = height - padding - ((value - min) / range) * (height - padding * 2)
       return `${x},${y}`
     })

@@ -48,4 +48,19 @@ describe('WarehouseInventoryScreen', () => {
     expect(wrapper.text()).toContain('华东仓')
     expect(wrapper.text()).toContain('华北仓可调拨 8 个 SKU 至华东仓')
   })
+  it('renders three trend lines with seven point pairs each', () => {
+    const wrapper = mount(WarehouseInventoryScreen)
+    const lines = wrapper.findAll('.trend-chart polyline')
+
+    expect(lines).toHaveLength(3)
+
+    lines.forEach((line) => {
+      const pointPairs = line.attributes('points').split(' ')
+
+      expect(pointPairs).toHaveLength(7)
+      pointPairs.forEach((pointPair) => {
+        expect(pointPair).toMatch(/^\d+(?:\.\d+)?,\d+(?:\.\d+)?$/)
+      })
+    })
+  })
 })
